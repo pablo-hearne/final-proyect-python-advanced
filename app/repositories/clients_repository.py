@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 
 
-from app.repositories.models.clients_model import ClientsModel
+from app.repositories.models.clients_model import ClientsModel,Client_and_pet
 
 class Clients:
 
@@ -12,12 +12,18 @@ class Clients:
     
 
     def get_client(self,db : Session,client_id:int):
+        """
+        returns the solicited client and the id of the pet(s) owned by said client
+        """
         client = db.query(ClientsModel).options(
             joinedload(ClientsModel.pets),
         ).filter_by(id=client_id).first()
         if not client:
             raise HTTPException(status_code=404, detail="Client not found")
-        return client
+        
+        owned_pets = db.query(Client_and_pet).filter_by(client_id = client_id).all()
+
+        return client,owned_pets
     
     def create_client(self, db : Session, client:ClientsModel):
         new_client = ClientsModel(
