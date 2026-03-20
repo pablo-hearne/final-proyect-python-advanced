@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.repositories.models.pets_model import PetsModel
 from app.repositories.models.clients_model import Client_and_pet
 
-class Pets:
+class PetsRepository:
 
     def get_pets(self, db : Session):
         return db.query(PetsModel).all()

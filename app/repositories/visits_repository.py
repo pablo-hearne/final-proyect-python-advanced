@@ -7,7 +7,7 @@ from app.repositories.models.clients_model import ClientsModel,Client_and_pet
 from app.repositories.models.pets_model import PetsModel
 from app.repositories.models.visits_model import VisitsModel
 
-class Visits():
+class VisitsRepository:
 
     def get_visits(self, db:Session):
         return db.query(VisitsModel).all()

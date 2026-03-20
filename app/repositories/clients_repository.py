@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.repositories.models.clients_model import ClientsModel,Client_and_pet
 
-class Clients:
+class ClientsRepository:
 
 
     def get_clients(self,db : Session):
