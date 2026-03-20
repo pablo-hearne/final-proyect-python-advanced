@@ -15,18 +15,19 @@
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from app.repositories.database import Base
+from app.repositories.models.pets_model import Client_and_pet
 
 
 
 # Association table for many-to-many: clients <-> pets
 
-Client_and_pet = Table(
-    "Client_and_pet",
-    Base.metadata,
-    Column("couple_id" , Integer , nullable=False , autoincrement=True , index=True),
-    Column("client_id" , Integer , ForeignKey("client.id") , primary_key=True ,index=True),
-    Column("pet_id" , Integer , ForeignKey("pet.id") , primary_key=True, index=True)
-)
+# Client_and_pet = Table(
+#     "Client_and_pet",
+#     Base.metadata,
+#     Column("couple_id" , Integer , nullable=False , autoincrement=True , index=True),
+#     Column("client_id" , Integer , ForeignKey("clients.id") , primary_key=True ,index=True),
+#     Column("pet_id" , Integer , ForeignKey("pets.id") , primary_key=True, index=True)
+# )
 
 
 class ClientsModel(Base):
@@ -39,5 +40,5 @@ class ClientsModel(Base):
     adress = Column(String)
 
 
-    pets = relationship("PetsModel", secondary = Client_and_pet, back_populates = "client")
+    pets = relationship("PetsModel", secondary = Client_and_pet, back_populates = "clients")
 
