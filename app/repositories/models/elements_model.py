@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Table, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from app.repositories.database import Base
 
-# Association table for many-to-many: clients <-> pets
+# Association table for many-to-many: elements <-> visits
 
 Elements_used = Table(
     "Elements_used",

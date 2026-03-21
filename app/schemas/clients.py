@@ -7,7 +7,7 @@ class Client(BaseModel):
     name : str
     number : int
     email: str
-    residence : str
+    adress : str
 
 class PetsSummary(BaseModel):
     id : int

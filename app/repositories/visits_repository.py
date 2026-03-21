@@ -1,11 +1,8 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select
 
-
-from app.repositories.models.clients_model import ClientsModel,Client_and_pet
-from app.repositories.models.pets_model import PetsModel
 from app.repositories.models.visits_model import VisitsModel
+from app.repositories.models.pets_model import Client_and_pet
 
 class VisitsRepository:
 
@@ -21,33 +18,12 @@ class VisitsRepository:
         if not visit:
             raise HTTPException(404,"Visit not found")
         
-        """
-        Option n° 1: wanna know if it's wrong and WHY it is wrong
-        """
-
-        # patient_and_owner = Client_and_pet.select().filter_by(couple_id = visit.client_and_pet_id)
-
-        # client = db.query(ClientsModel).filter_by(id = patient_and_owner.c[1]).first()
-        # pet = db.query(PetsModel).filter_by(id = patient_and_owner.c[2]).first()
-
-        """
-        Option n° 2: same here but i googled it 
-        """
-
-        stmt = select(Client_and_pet).where(
-            Client_and_pet.c.couple_id == visit.client_and_pet_id
+        couple = db.query(Client_and_pet).options(
+            joinedload(Client_and_pet.client),
+            joinedload(Client_and_pet.pet)
         )
 
-        patient_and_owner = db.connection().execute(stmt).first()
-
-        if patient_and_owner != None:
-            patient_and_owner = patient_and_owner.tuple()
-            client = db.query(ClientsModel).filter_by(id = patient_and_owner(1)).first()
-            pet = db.query(PetsModel).filter_by(id = patient_and_owner(2)).first()
-            
-            return visit,client,pet
-        
-        return visit
+        return visit,couple
         
     def create_visit(self, db:Session, visit:VisitsModel):
         new_visit = VisitsModel(

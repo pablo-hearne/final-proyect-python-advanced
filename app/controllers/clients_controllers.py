@@ -5,8 +5,6 @@ from app.repositories.database import get_db
 from app.services.clients_services import ClientsServices
 from app.schemas.clients import Client
 from app.schemas.clients import ClientWithPets
-from app.repositories.models.clients_model import ClientsModel 
-
 
 router = APIRouter(prefix= "/clients", tags= ["Clients"])
 service = ClientsServices()
@@ -21,16 +19,16 @@ def get_clients(db : Session = Depends(get_db)):
 def get_client(client_id:int, db:Session = Depends(get_db)):
     return service.get_client(db,client_id)
 
-@router.post("/new_client",response_model=Client)
-def create_client(client:ClientsModel, db:Session = Depends(get_db)): #acá quiero poner client : Client, pero me dice 
+@router.post("/new_client")
+def create_client(client:Client, db:Session = Depends(get_db)): #acá quiero poner client : Client, pero me dice 
     return service.create_client(db,client)              #que debería ser ClientsModel (aiura)
 
 @router.put("/update_client/{client_id}")
-def update_client(client_id:int, client:Client, db:Session = Depends(get_db)): #same problem here #type: ignore
+def update_client(client_id:int, client:Client, db:Session = Depends(get_db)): 
     return service.update_client(db, client_id, client)
 
 @router.delete("/delete_client/{client_id}")
-def delete_client( client_id:int, db:Session = Depends(get_db)): #type: ignore
+def delete_client( client_id:int, db:Session = Depends(get_db)):
     return service.delete_client(db,client_id)
 
 

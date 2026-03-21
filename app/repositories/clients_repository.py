@@ -2,7 +2,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 
 
-from app.repositories.models.clients_model import ClientsModel,Client_and_pet
+from app.repositories.models.clients_model import ClientsModel
+from app.repositories.models.pets_model import Client_and_pet
 
 class ClientsRepository:
 
@@ -16,12 +17,15 @@ class ClientsRepository:
         returns the solicited client and the id of the pet(s) owned by said client
         """
         client = db.query(ClientsModel).options(
-            joinedload(ClientsModel.pets),
+            joinedload(ClientsModel.pets_association),
         ).filter_by(id=client_id).first()
+
         if not client:
             raise HTTPException(status_code=404, detail="Client not found")
         
-        owned_pets = db.query(Client_and_pet).filter_by(client_id = client_id).all()
+        owned_pets = db.query(Client_and_pet).options(
+            joinedload(Client_and_pet.pet)
+        ).filter_by(id = client.pets_association.client_id).all()
 
         return client,owned_pets
     
@@ -52,7 +56,6 @@ class ClientsRepository:
     
     def delete_client(self, db : Session , client_id : int):
         db_client = db.query(ClientsModel).filter_by(id=client_id).first()
-        # db_client = db.query(ClientsModel).filter_by(ClientsModel.id == client_id).first()   # Cuál es la diferencia entre ambos?
         if db_client:
             db.delete(db_client)
             db.commit()

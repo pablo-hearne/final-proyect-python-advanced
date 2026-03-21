@@ -2,9 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 
 
-
-from app.repositories.models.pets_model import PetsModel
-from app.repositories.models.clients_model import Client_and_pet
+from app.repositories.models.pets_model import PetsModel, Client_and_pet
 
 class PetsRepository:
 
@@ -15,10 +13,14 @@ class PetsRepository:
         """
         Returns the solicited pet and the id of the owner(s) of said pet
         """
-        pet = db.query(PetsModel).filter_by(id = pet_id).first()
+        pet = db.query(PetsModel).options(
+            joinedload(PetsModel.clients_association)
+        ).filter_by(id = pet_id).first()
         if not pet:
             raise HTTPException(status_code=404, detail="Pet not found")
-        owners = db.query(Client_and_pet).filter_by(pet_id = pet_id).all()
+        owners = db.query(Client_and_pet).options(
+            joinedload(Client_and_pet.client)
+        ).filter_by(id = pet.clients_association.pet_id).all()
         return pet,owners
     
     def create_pet(self, db:Session , pet : PetsModel):
@@ -26,7 +28,6 @@ class PetsRepository:
             pet_name = pet.name,
             pet_date = pet.date,
             pet_race = pet.race,
-            pet_client = pet.client
         )
         db.add(new_pet)
         db.commit()
@@ -47,7 +48,6 @@ class PetsRepository:
     
     def delete_pet(self, db:Session, pet_id:int):
         db_pet = db.query(PetsModel).filter_by(id=pet_id).first()
-
         db.delete(db_pet)
         db.commit()
         
