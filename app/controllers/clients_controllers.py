@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.repositories.database import get_db
 from app.services.clients_services import ClientsServices
-from app.schemas.clients import Client
-from app.schemas.clients import ClientWithPets
+from app.schemas.clients import Client,ClientWithPets
+
 
 router = APIRouter(prefix= "/clients", tags= ["Clients"])
 service = ClientsServices()

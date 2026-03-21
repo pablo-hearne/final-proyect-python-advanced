@@ -10,10 +10,9 @@ class Client(BaseModel):
     adress : str
 
 class PetsSummary(BaseModel):
-    id : int
-    name : str
-    race : str
-    date : str
+    couple_id : int
+    client_id : int
+    pet_id : int
 
     class Config:
         from_attributes = True
