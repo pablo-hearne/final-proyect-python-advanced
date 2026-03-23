@@ -18,7 +18,7 @@ class TransactionsRepository:
     
     def create_transaction(self, db:Session, transaction:TransactionsModel):
         new_transaction = TransactionsModel(
-            visit = transaction.visit_id,
+            visit_id = transaction.visit_id,
             type_of_payment = transaction.type_of_payment,
             amount = transaction.amount
         )

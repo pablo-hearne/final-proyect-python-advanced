@@ -19,7 +19,7 @@ def get_clients(db : Session = Depends(get_db)):
 def get_client(client_id:int, db:Session = Depends(get_db)):
     return service.get_client(db,client_id)
 
-@router.post("/new_client")
+@router.post("/new_client",response_model=Client)
 def create_client(client:Client, db:Session = Depends(get_db)): #acá quiero poner client : Client, pero me dice 
     return service.create_client(db,client)              #que debería ser ClientsModel (aiura)
 

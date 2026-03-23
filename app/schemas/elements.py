@@ -6,7 +6,6 @@ from typing import List
 
 
 class Element(BaseModel):
-    id : int
     name : str
     price : float
     description: str

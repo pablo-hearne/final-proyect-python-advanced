@@ -18,18 +18,21 @@ class PetsRepository:
         ).filter_by(id = pet_id).first()
         if not pet:
             raise HTTPException(status_code=404, detail="Pet not found")
-        owners = db.query(Client_and_pet).options(
-            joinedload(Client_and_pet.client)
-        ).filter_by(id = pet.clients_association.pet_id).all()
-        return pet,owners
+        return pet
     
-    def create_pet(self, db:Session , pet : PetsModel):
+    def create_pet(self, db:Session , pet : PetsModel, client_id:int):
         new_pet = PetsModel(
-            pet_name = pet.name,
-            pet_date = pet.date,
-            pet_race = pet.race,
+            name = pet.name,
+            date = pet.date,
+            race = pet.race,
         )
         db.add(new_pet)
+        db.flush()
+        new_association = Client_and_pet(
+            client_id = client_id,
+            pet_id = new_pet.id
+        )
+        db.add(new_association)
         db.commit()
         db.refresh(new_pet)
         return new_pet
@@ -52,3 +55,13 @@ class PetsRepository:
         db.commit()
         
         return db_pet
+    
+    def associate_pet_with_client(self, db: Session, client_id: int, pet_id: int):
+        new_association = Client_and_pet(
+            client_id = client_id,
+            pet_id = pet_id
+        )
+        db.add(new_association)
+        db.commit()
+        db.refresh(new_association)
+        return {"message": f"Mascota vinculada al cliente {client_id} exitosamente","client_id":client_id,"pet_id":pet_id}

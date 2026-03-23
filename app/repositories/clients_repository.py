@@ -22,12 +22,7 @@ class ClientsRepository:
 
         if not client:
             raise HTTPException(status_code=404, detail="Client not found")
-        
-        owned_pets = db.query(Client_and_pet).options(
-            joinedload(Client_and_pet.pet)
-        ).filter_by(id = client.pets_association.client_id).all()
-
-        return client,owned_pets
+        return client
     
     def create_client(self, db : Session, client:ClientsModel):
         new_client = ClientsModel(

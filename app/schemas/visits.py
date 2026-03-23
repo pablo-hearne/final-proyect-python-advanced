@@ -4,7 +4,6 @@ from typing import List
 
 
 class Visits(BaseModel):
-    id : int
     client_and_pet_id : int
     date : str
     description : str
@@ -29,6 +28,24 @@ class TransacationSummary(BaseModel):
     class Config:
         from_attributes = True
 
+class ClientVisiting(BaseModel):
+    id : int
+    name : str
+    number : str
+    email: str
+    adress : str
+    
+    class Config:
+        from_attributes = True
+
+
+class PetVisiting(BaseModel):
+    id : int
+    name : str
+    race : str
+    date : str
+
+
 
 class VisitsWithCompleteData(BaseModel):
     id : int
@@ -39,4 +56,6 @@ class VisitsWithCompleteData(BaseModel):
 
     elements : List[ElementsSummary] = []
     transactions : List[TransacationSummary] = []
+    client : ClientVisiting
+    pet : PetVisiting
     

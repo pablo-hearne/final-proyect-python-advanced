@@ -5,14 +5,15 @@ from typing import List
 
 class Client(BaseModel):
     name : str
-    number : int
+    number : str
     email: str
     adress : str
 
 class PetsSummary(BaseModel):
-    couple_id : int
-    client_id : int
-    pet_id : int
+    id : int
+    name : str
+    race : str
+    date : str
 
     class Config:
         from_attributes = True
@@ -20,9 +21,9 @@ class PetsSummary(BaseModel):
 class ClientWithPets(BaseModel):
     id : int
     name : str
-    number : int
+    number : str
     email : str
-    residence : str
+    adress : str
     pets : List[PetsSummary] = []
 
     class Config:

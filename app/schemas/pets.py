@@ -3,15 +3,16 @@ from typing import List
 
 
 class Pets(BaseModel):
-    id : int
     name : str
     race : str
     date : str
 
 class ClientsSummary(BaseModel):
-    couple_id : int
-    client_id : int
-    pet_id : int
+    id : int
+    name : str
+    number : str
+    email : str
+    adress : str
 
     class Config:
         from_attributes = True

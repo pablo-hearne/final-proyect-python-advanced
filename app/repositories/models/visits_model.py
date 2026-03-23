@@ -13,7 +13,18 @@ class VisitsModel(Base):
     total_cost = Column(Float)
 
     elements = relationship("ElementsModel", secondary = Elements_used , back_populates= "visits" )
-    transactions = relationship("TransactionModel" , back_populates = "visit")
+    transactions = relationship("TransactionsModel" , back_populates = "visit")
+    couple = relationship("Client_and_pet", back_populates="visits")
+
+    @property
+    def client(self):
+        # Si existe el puente, devuelve el cliente. Si no, devuelve None.
+        return self.couple.client if self.couple else None
+
+    @property
+    def pet(self):
+        # Si existe el puente, devuelve la mascota. Si no, devuelve None.
+        return self.couple.pet if self.couple else None
 
 
 # comment n°1: 

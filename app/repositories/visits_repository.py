@@ -12,18 +12,18 @@ class VisitsRepository:
     def get_visit(self, db:Session, visit_id:int):
         visit = db.query(VisitsModel).options(
             joinedload(VisitsModel.elements),
-            joinedload(VisitsModel.transactions)
+            joinedload(VisitsModel.transactions),
+            joinedload(VisitsModel.couple).joinedload(Client_and_pet.client),
+            joinedload(VisitsModel.couple).joinedload(Client_and_pet.pet)
         ).filter_by(id = visit_id).first()
 
         if not visit:
             raise HTTPException(404,"Visit not found")
         
-        couple = db.query(Client_and_pet).options(
-            joinedload(Client_and_pet.client),
-            joinedload(Client_and_pet.pet)
-        )
 
-        return visit,couple
+        return visit
+        
+
         
     def create_visit(self, db:Session, visit:VisitsModel):
         new_visit = VisitsModel(

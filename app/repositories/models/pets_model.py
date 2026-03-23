@@ -26,3 +26,7 @@ class PetsModel(Base):
     date = Column(String)
 
     clients_association = relationship("Client_and_pet", back_populates="pet")
+
+    @property
+    def clients(self):
+        return [assoc.client for assoc in self.clients_association]
