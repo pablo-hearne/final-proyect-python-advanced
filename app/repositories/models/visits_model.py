@@ -4,6 +4,19 @@ from app.repositories.database import Base
 from app.repositories.models.elements_model import Elements_used
 
 class VisitsModel(Base):
+    """
+    Medical Visits' model for the database.
+
+    Registers each visit linked to a specified couple (Client, Pet), 
+    such as the elements used and the transactions related to the visit.
+
+    Attributes:
+        id (int): Unique identifier for the visit.
+        client_and_pet_id (int): ID of the couple (Client-Pet) that asisted to the visit.
+        date (str): Date of the visit.
+        description (str): Motive or description of the visit.
+        total_cost (float): Total cost of the visit, including the elements used.
+    """
     __tablename__ = "visits"
 
     id = Column(Integer , nullable=False , autoincrement=True , primary_key=True , index=True)
@@ -18,15 +31,22 @@ class VisitsModel(Base):
 
     @property
     def client(self):
-        # Si existe el puente, devuelve el cliente. Si no, devuelve None.
+        """
+        Function to obtain the client responsible for the visit.
+
+        Returns:
+            ClientsModel | None: Client object, or None if the bridge does not exist.
+        """
         return self.couple.client if self.couple else None
 
     @property
     def pet(self):
-        # Si existe el puente, devuelve la mascota. Si no, devuelve None.
+        """
+        Function to obtain the pet responsible for the visit.
+
+        Returns:
+            PetsModel | None: Pet object, or None if the bridge does not exist.
+        """
         return self.couple.pet if self.couple else None
 
 
-# comment n°1: 
-# Es: La verdad es que a veces viene un cliente con varias mascotas, pero una cosa a la vez
-# En: truth is, many times a client comes with more than just one pet, but i would like to treat the problems as they come (one at the time)

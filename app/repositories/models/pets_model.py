@@ -5,6 +5,17 @@ from app.repositories.database import Base
 
 
 class Client_and_pet(Base):
+    """
+    Model for the intermediate table for Client-Pets relationship
+
+    Manages the "many-to-many" relation between Clients and Pets,
+    allowing the client to have many pets and viceversa. 
+
+    Attributes:
+        couple_id (int): Unique identifier for the couple.
+        client_id (int): Foreign key related to the client.
+        pet_id (int): Foreign key related to the pet.
+    """
     __tablename__ = "client_and_pet"
 
     couple_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -18,6 +29,15 @@ class Client_and_pet(Base):
 
 
 class PetsModel(Base):
+    """
+    Pets' model for the database.
+
+    Attributes:
+        id (int): Unique identifier for the patient.
+        name (str): Name of the pet.
+        race (str): Race or species of the pet.
+        date (str): Date of birth of the patient.
+    """
     __tablename__ = "pets"
 
     id = Column(Integer, index=True, primary_key=True)

@@ -3,18 +3,38 @@ from sqlalchemy.orm import Session, joinedload
 
 
 from app.repositories.models.clients_model import ClientsModel
-from app.repositories.models.pets_model import Client_and_pet
 
 class ClientsRepository:
+    """
+    Repository class for managing Client database operations.
+    """
 
+    def get_clients(self,db : Session) -> list[ClientsModel]:
+        """
+        Retrieves all clients from the database.
 
-    def get_clients(self,db : Session):
+        Args:
+            db (Session): The database session.
+
+        Returns:
+            List[ClientsModel]: A list of all registered clients.
+        """
         return db.query(ClientsModel).all()
     
 
-    def get_client(self,db : Session,client_id:int):
+    def get_client(self,db : Session,client_id:int) -> ClientsModel:
         """
-        returns the solicited client and the id of the pet(s) owned by said client
+        Retrieves a specific client and their associated pets by ID.
+
+        Args:
+            db (Session): The database session.
+            client_id (int): The ID of the client to retrieve.
+
+        Raises:
+            HTTPException: If the client is not found (404).
+
+        Returns:
+            ClientsModel: The requested client object.
         """
         client = db.query(ClientsModel).options(
             joinedload(ClientsModel.pets_association),
@@ -24,7 +44,17 @@ class ClientsRepository:
             raise HTTPException(status_code=404, detail="Client not found")
         return client
     
-    def create_client(self, db : Session, client:ClientsModel):
+    def create_client(self, db : Session, client:ClientsModel) ->ClientsModel:
+        """
+        Creates a new client in the database.
+
+        Args:
+            db (Session): The database session.
+            client (ClientsModel): The client data to insert.
+
+        Returns:
+            ClientsModel: The newly created client object.
+        """
         new_client = ClientsModel(
             name = client.name,
             adress = client.adress,
@@ -36,7 +66,21 @@ class ClientsRepository:
         db.refresh(new_client)
         return new_client
     
-    def update_client(self, db: Session, client_id : int, client : ClientsModel):
+    def update_client(self, db: Session, client_id : int, client : ClientsModel) -> ClientsModel:
+        """
+        Updates an existing client's information.
+
+        Args:
+            db (Session): The database session.
+            client_id (int): The ID of the client to update.
+            client (ClientsModel): The new client data.
+
+        Raises:
+            HTTPException: If the client is not found (404).
+
+        Returns:
+            ClientsModel: The updated client object.
+        """
         db_client = db.query(ClientsModel).filter_by(id=client_id).first()
         if not db_client:
             raise HTTPException(status_code=404, detail="Client not found")
@@ -49,12 +93,27 @@ class ClientsRepository:
         db.refresh(db_client)
         return db_client
     
-    def delete_client(self, db : Session , client_id : int):
+    def delete_client(self, db : Session , client_id : int) -> ClientsModel:
+        """
+        Deletes a client from the database.
+
+        Args:
+            db (Session): The database session.
+            client_id (int): The ID of the client to delete.
+        
+        Raises:
+            HTTPException: If the client is not found (404).
+
+        Returns:
+            ClientsModel: The deleted client object
+        """
         db_client = db.query(ClientsModel).filter_by(id=client_id).first()
         if db_client:
             db.delete(db_client)
             db.commit()
             return db_client
+        else:
+            raise HTTPException(404, "Client not found")
     
 
 

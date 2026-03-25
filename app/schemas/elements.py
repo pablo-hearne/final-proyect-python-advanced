@@ -1,32 +1,38 @@
 from pydantic import BaseModel
-from typing import List
 
 
 
 
 
 class Element(BaseModel):
+    """
+    Scheme for creating a new element (Object or Service)
+
+    Attributes:
+        name (str): Element's name .
+        price (float): Element's price.
+        description (str): Element's details.
+    """
     name : str
     price : float
     description: str
 
-class VisitsSummary(BaseModel):
-    id : int
-    client_and_pet_id : int
-    date : str
-    description : str
-    total_cost : float
-
-    class Config:
-        from_attributes = True
 
 
 class ElementWithVisits(BaseModel):
+    """
+    Response scheme for elements information.
+
+    Attributes:
+        id (int): Element's ID.
+        name (str): Element's name.
+        price (float): Element's price.
+        description (str): Element's description.
+    """
     id: int
     name : str
     price : float
     description : str
-    visits : List[VisitsSummary] = []
 
 
     class Config:

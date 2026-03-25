@@ -14,6 +14,17 @@ Elements_used = Table(
 
 
 class ElementsModel(Base):
+    """
+    Model for the Elements of the Database.
+
+    All aplicable or chargable medicine or services' catalog.
+
+    Attributes:
+        id (int): Unique element identifier.
+        name (str): Name of the service or element.
+        price (float): Actual price of the element.
+        description (str): Detailed description of the element.
+    """
     __tablename__ = "elements"
 
     id = Column(Integer, primary_key= True , index=True)
